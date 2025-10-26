@@ -9,9 +9,10 @@ interface ProductGridProps {
   products: Product[];
   loading?: boolean;
   itemsPerPage?: number;
+  onProductClick?: (productId: number) => void;
 }
 
-function ProductGrid({ products, loading = false, itemsPerPage = 12 }: ProductGridProps) {
+function ProductGrid({ products, loading = false, itemsPerPage = 12, onProductClick }: ProductGridProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -49,8 +50,9 @@ function ProductGrid({ products, loading = false, itemsPerPage = 12 }: ProductGr
   };
 
   const handleViewDetail = (productId: number) => {
-    console.log('Ver detalle del producto:', productId);
-    // Aquí se implementará la navegación al detalle
+    if (onProductClick) {
+      onProductClick(productId);
+    }
   };
 
   // Generar números de página para mostrar

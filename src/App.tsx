@@ -1,14 +1,20 @@
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import Header from './components/Header'
 import ProductGrid from './components/ProductGrid'
 import CategoryFilter from './components/CategoryFilter'
-import { mockProducts } from './data/mockProducts'
+import LoadingSpinner from './components/LoadingSpinner'
+import ErrorMessage from './components/ErrorMessage'
+import ProductDetailModal from './components/ProductDetailModal'
+import { useProducts } from './hooks/useProducts'
 import { useURLParams } from './hooks/useURLParams'
 import { translateCategory } from './utils/formatters'
+import type { Product } from './types/product'
 import './App.css'
 
 function App() {
+  const { products, loading, error, refetch } = useProducts();
   const { params, updateURLParams } = useURLParams();
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const handleSearch = (query: string) => {
     updateURLParams({ search: query });
@@ -30,15 +36,26 @@ function App() {
     updateURLParams({ search: '', category: '' });
   }
 
+  const handleProductClick = (productId: number) => {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      setSelectedProduct(product);
+    }
+  }
+
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
+  }
+
   // Obtener categorías únicas
   const categories = useMemo(() => {
-    const uniqueCategories = new Set(mockProducts.map(p => p.category));
+    const uniqueCategories = new Set(products.map(p => p.category));
     return Array.from(uniqueCategories).sort();
-  }, []);
+  }, [products]);
 
   // Filtrar productos según búsqueda y categoría
   const filteredProducts = useMemo(() => {
-    let filtered = mockProducts;
+    let filtered = products;
 
     // Filtrar por categoría
     if (params.category) {
@@ -58,7 +75,7 @@ function App() {
     }
 
     return filtered;
-  }, [params.search, params.category]);
+  }, [products, params.search, params.category]);
 
   // Actualizar el input de búsqueda cuando cambia la URL
   useEffect(() => {
@@ -74,6 +91,16 @@ function App() {
       <main className="app__main">
         <div className="app__container">
           <h1>Catálogo de Productos</h1>
+
+          {/* Estado de carga */}
+          {loading && <LoadingSpinner fullPage message="Cargando productos desde la API..." />}
+
+          {/* Estado de error */}
+          {error && !loading && <ErrorMessage message={error} onRetry={refetch} />}
+
+          {/* Contenido principal */}
+          {!loading && !error && (
+            <>
 
           {/* Filtros */}
           <div className="app__filters">
@@ -134,9 +161,20 @@ function App() {
           <ProductGrid
             products={filteredProducts}
             itemsPerPage={12}
+            onProductClick={handleProductClick}
           />
+            </>
+          )}
         </div>
       </main>
+
+      {/* Modal de detalle de producto */}
+      {selectedProduct && (
+        <ProductDetailModal
+          product={selectedProduct}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   )
 }

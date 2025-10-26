@@ -12,22 +12,121 @@ const api = axios.create({
   },
 });
 
+// Diccionario de traducciones para productos comunes
+const translations: Record<string, { title: string; description: string }> = {
+  '1': {
+    title: 'Mochila Fjallraven Foldsack No. 1 para Laptop 15 Pulgadas',
+    description: 'Tu mochila perfecta para uso diario y caminatas en el bosque. Guarda tu laptop (hasta 15 pulgadas) en el compartimento acolchado. Ideal para el día a día con múltiples bolsillos y diseño ergonómico.'
+  },
+  '2': {
+    title: 'Camisetas Premium Ajuste Slim para Hombre',
+    description: 'Estilo ajustado, mangas largas tipo raglan con contraste, cuello henley de tres botones. Tela ligera y suave para mayor transpirabilidad y comodidad durante todo el día.'
+  },
+  '3': {
+    title: 'Chaqueta de Algodón para Hombre',
+    description: 'Excelente chaqueta exterior para primavera, otoño e invierno. Adecuada para muchas ocasiones como trabajo, senderismo, camping, escalada en montaña, ciclismo, viajes u otras actividades al aire libre.'
+  },
+  '4': {
+    title: 'Camisa Casual Ajuste Slim para Hombre',
+    description: 'El color puede variar ligeramente entre la pantalla y el producto real. Ten en cuenta que las tallas pueden variar según la contextura de cada persona, por lo que se recomienda revisar la tabla de tallas detallada.'
+  },
+  '5': {
+    title: 'Pulsera John Hardy Legends Naga Dragón Oro y Plata para Mujer',
+    description: 'De nuestra Colección Legends, la Naga fue inspirada por el mítico dragón de agua que protege la perla del océano. Úsala hacia adentro para recibir amor y abundancia, o hacia afuera para protección.'
+  },
+  '6': {
+    title: 'Anillo de Oro Macizo con Micropavé',
+    description: 'Satisfacción garantizada. Devolución o cambio de cualquier pedido dentro de 30 días. Diseñado y vendido por Hafeez Center. Joyería de alta calidad con acabado impecable.'
+  },
+  '7': {
+    title: 'Anillo de Compromiso Solitario Bañado en Oro Blanco',
+    description: 'Anillo clásico de compromiso con diamante solitario para ella. Regalo perfecto para consentir a tu amor en compromisos, bodas, aniversarios, día de San Valentín y ocasiones especiales.'
+  },
+  '8': {
+    title: 'Aros Túnel de Acero Inoxidable Bañados en Oro Rosa',
+    description: 'Aros tipo túnel con doble ensanchamiento bañados en oro rosa. Fabricados en acero inoxidable 316L de alta calidad. Diseño moderno y elegante.'
+  },
+  '9': {
+    title: 'Disco Duro Externo Portátil WD Elements 2TB USB 3.0',
+    description: 'Compatibilidad USB 3.0 y USB 2.0. Transferencias rápidas de datos. Mejora el rendimiento de tu PC. Alta capacidad de almacenamiento. Formateado NTFS para Windows 10, 8.1 y 7. Puede requerir reformateo para otros sistemas operativos.'
+  },
+  '10': {
+    title: 'SSD Interno SanDisk PLUS 1TB SATA III 6 Gb/s',
+    description: 'Actualización fácil para un arranque, apagado, carga de aplicaciones y respuesta más rápidos. Comparado con discos duros SATA de 2.5 pulgadas a 5400 RPM. Basado en especificaciones publicadas y pruebas internas.'
+  },
+  '11': {
+    title: 'SSD Silicon Power 256GB 3D NAND A55 SATA III 2.5',
+    description: 'Tecnología 3D NAND flash para ofrecer altas velocidades de transferencia. Velocidades notables que permiten un arranque más rápido y un mejor rendimiento general del sistema.'
+  },
+  '12': {
+    title: 'Disco Duro Externo WD 4TB para Gaming PlayStation 4',
+    description: 'Expande tu experiencia de juego en PS4. Juega en cualquier lugar. Configuración rápida y fácil. Diseño elegante con alta capacidad. Garantía limitada del fabricante de 3 años.'
+  },
+  '13': {
+    title: 'Monitor Acer SB220Q 21.5 Pulgadas Full HD IPS Ultra Delgado',
+    description: 'Pantalla IPS Full HD de 21.5 pulgadas (1920 x 1080) con tecnología Radeon FreeSync. Tasa de refresco de 75Hz por puerto HDMI. Diseño sin marco ultra delgado. Tiempo de respuesta de 4ms. Panel IPS. Relación de aspecto 16:9. Soporte para 16.7 millones de colores. Brillo de 250 nits. Ángulo de inclinación de -5 a 15 grados. Ángulos de visión horizontal y vertical de 178 grados.'
+  },
+  '14': {
+    title: 'Monitor Gamer Samsung Curvo 49 Pulgadas CHG90 144Hz QLED Ultra Ancho',
+    description: 'Monitor gamer super ultra ancho de 49 pulgadas curvo 32:9 equivalente a dos pantallas de 27 pulgadas lado a lado. Tecnología QUANTUM DOT (QLED), soporte HDR y calibración de fábrica que proporciona colores y contraste increíblemente realistas y precisos. Tasa de refresco alta de 144Hz y tiempo de respuesta ultra rápido de 1ms que eliminan el desenfoque de movimiento y reducen el retraso de entrada.'
+  },
+  '15': {
+    title: 'Chaqueta de Invierno 3 en 1 para Mujer Snowboard',
+    description: 'Nota: La chaqueta es talla estándar, elige tu talla habitual. Material: 100% Poliéster. Forro desmontable de polar cálido. Forro funcional desmontable amigable con la piel, liviano y cálido. Chaqueta con cuello alto te mantiene abrigada en clima frío. Bolsillos con cierre: 2 bolsillos de mano, 2 bolsillos en el pecho y 1 bolsillo oculto interno. Diseño humanizado: capucha ajustable y desmontable, puños ajustables para prevenir viento y agua. Diseño 3 en 1 desmontable brinda más conveniencia, puedes separar el abrigo y el forro según necesites. Adecuada para diferentes estaciones.'
+  },
+  '16': {
+    title: 'Chaqueta Moto de Cuero Sintético con Capucha para Mujer',
+    description: '100% POLIURETANO (exterior) 100% POLIÉSTER (forro) 75% POLIÉSTER 25% ALGODÓN (suéter). Material de cuero sintético para estilo y comodidad. 2 bolsillos frontales. Chaqueta estilo mezclilla con capucha 2 en 1. Detalle de botones en la cintura. Costuras detalladas en los lados. LAVAR SOLO A MANO / NO USAR CLORO / SECAR AL AIRE / NO PLANCHAR.'
+  },
+  '17': {
+    title: 'Chaqueta Impermeable Cortaviento a Rayas para Mujer',
+    description: 'Liviana, perfecta para viajes o uso casual. Manga larga con capucha, diseño de cintura ajustable con cordón. Cierre frontal con botones y cremallera. Completamente forrada a rayas. Tiene 2 bolsillos laterales de buen tamaño para guardar todo tipo de cosas. Cubre las caderas y la capucha es generosa sin exagerar. Capucha forrada en algodón con cordones ajustables le dan un aspecto realmente elegante.'
+  },
+  '18': {
+    title: 'Blusa de Manga Corta Cuello Barco para Mujer',
+    description: '95% RAYÓN 5% SPANDEX. Hecho en USA o importado. No usar cloro. Tela liviana con gran elasticidad para mayor comodidad. Acanalado en mangas y cuello. Doble costura en el dobladillo inferior. Perfecta para uso diario.'
+  },
+  '19': {
+    title: 'Polera Deportiva Manga Corta Absorbe Humedad para Mujer',
+    description: '100% Poliéster. Lavable a máquina. Poliéster catiónico 100% interlock. Preencogida para un gran ajuste. Liviana, holgada y altamente transpirable con tela que absorbe la humedad. Tela suave y liviana con cuello en V cómodo y ajuste más delgado. Ofrece una silueta elegante y más femenina con comodidad adicional.'
+  },
+  '20': {
+    title: 'Polera Casual de Algodón Manga Corta para Mujer',
+    description: '95% Algodón, 5% Spandex. Características: Casual, manga corta, estampado de letras, cuello en V, poleras de moda. La tela es suave y tiene algo de elasticidad. Ocasión: Casual, oficina, playa, escuela, hogar, calle. Temporada: Primavera, verano, otoño, invierno.'
+  }
+};
+
+// Función para traducir un producto
+function translateProduct(product: Product): Product {
+  const translation = translations[product.id.toString()];
+
+  if (translation) {
+    return {
+      ...product,
+      title: translation.title,
+      description: translation.description
+    };
+  }
+
+  return product;
+}
+
 // Obtener todos los productos
 export const getAllProducts = async (): Promise<Product[]> => {
   const response = await api.get<Product[]>('/products');
-  return response.data;
+  return response.data.map(translateProduct);
 };
 
 // Obtener un producto por ID
 export const getProductById = async (id: number): Promise<Product> => {
   const response = await api.get<Product>(`/products/${id}`);
-  return response.data;
+  return translateProduct(response.data);
 };
 
 // Obtener productos por categoría
 export const getProductsByCategory = async (category: string): Promise<Product[]> => {
   const response = await api.get<Product[]>(`/products/category/${category}`);
-  return response.data;
+  return response.data.map(translateProduct);
 };
 
 // Obtener todas las categorías
