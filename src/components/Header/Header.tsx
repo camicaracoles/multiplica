@@ -1,13 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Header.css';
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
+  searchValue?: string;
 }
 
-function Header({ onSearch }: HeaderProps) {
+function Header({ onSearch, searchValue = '' }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchValue);
+
+  // Sincronizar con el valor externo (URL)
+  useEffect(() => {
+    setSearchQuery(searchValue);
+  }, [searchValue]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

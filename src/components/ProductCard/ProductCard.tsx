@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Product } from '../../types/product';
+import { formatPrice } from '../../utils/formatters';
 import './ProductCard.css';
 
 interface ProductCardProps {
@@ -32,14 +33,6 @@ function ProductCard({ product, onViewDetail, isNew = false, isOnSale = false }:
   const truncateDescription = (text: string, maxLength: number = 100) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
-  };
-
-  // Formatear precio
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
   };
 
   // Renderizar estrellas de rating
