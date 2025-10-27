@@ -1,9 +1,25 @@
-// Servicio para interactuar con la API de FakeStore
+/**
+ * @fileoverview Servicio de API para interactuar con FakeStore API
+ * @description Proporciona funciones para obtener productos, categorías y gestionar traducciones
+ */
+
 import axios from 'axios';
 import type { Product } from '../types/product';
 
+/**
+ * URL base de la API de FakeStore
+ * @constant {string}
+ */
 const API_BASE_URL = 'https://fakestoreapi.com';
 
+/**
+ * Instancia configurada de Axios para realizar peticiones HTTP
+ * @constant
+ * @description
+ * - Timeout de 10 segundos
+ * - Headers JSON por defecto
+ * - Base URL configurada
+ */
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -12,7 +28,11 @@ const api = axios.create({
   },
 });
 
-// Diccionario de traducciones para productos comunes
+/**
+ * Diccionario de traducciones de productos de inglés a español
+ * @constant {Record<string, {title: string, description: string}>}
+ * @description Contiene traducciones manuales de títulos y descripciones para los 20 productos de FakeStore API
+ */
 const translations: Record<string, { title: string; description: string }> = {
   '1': {
     title: 'Mochila Fjallraven Foldsack No. 1 para Laptop 15 Pulgadas',
@@ -96,7 +116,12 @@ const translations: Record<string, { title: string; description: string }> = {
   }
 };
 
-// Función para traducir un producto
+/**
+ * Traduce un producto de inglés a español usando el diccionario de traducciones
+ * @param {Product} product - Producto original en inglés
+ * @returns {Product} Producto con título y descripción traducidos al español
+ * @private
+ */
 function translateProduct(product: Product): Product {
   const translation = translations[product.id.toString()];
 
@@ -111,25 +136,67 @@ function translateProduct(product: Product): Product {
   return product;
 }
 
-// Obtener todos los productos
+/**
+ * Obtiene todos los productos de la API
+ * @async
+ * @returns {Promise<Product[]>} Array de productos traducidos al español
+ * @throws {Error} Si la petición HTTP falla
+ * @example
+ * ```tsx
+ * const products = await getAllProducts();
+ * console.log(products.length); // 20
+ * ```
+ */
 export const getAllProducts = async (): Promise<Product[]> => {
   const response = await api.get<Product[]>('/products');
   return response.data.map(translateProduct);
 };
 
-// Obtener un producto por ID
+/**
+ * Obtiene un producto específico por su ID
+ * @async
+ * @param {number} id - ID del producto a obtener
+ * @returns {Promise<Product>} Producto traducido al español
+ * @throws {Error} Si la petición HTTP falla o el producto no existe
+ * @example
+ * ```tsx
+ * const product = await getProductById(1);
+ * console.log(product.title); // "Mochila Fjallraven..."
+ * ```
+ */
 export const getProductById = async (id: number): Promise<Product> => {
   const response = await api.get<Product>(`/products/${id}`);
   return translateProduct(response.data);
 };
 
-// Obtener productos por categoría
+/**
+ * Obtiene todos los productos de una categoría específica
+ * @async
+ * @param {string} category - Nombre de la categoría en inglés (ej: "electronics", "jewelery")
+ * @returns {Promise<Product[]>} Array de productos de la categoría, traducidos al español
+ * @throws {Error} Si la petición HTTP falla
+ * @example
+ * ```tsx
+ * const electronics = await getProductsByCategory('electronics');
+ * console.log(electronics.length); // 6
+ * ```
+ */
 export const getProductsByCategory = async (category: string): Promise<Product[]> => {
   const response = await api.get<Product[]>(`/products/category/${category}`);
   return response.data.map(translateProduct);
 };
 
-// Obtener todas las categorías
+/**
+ * Obtiene todas las categorías disponibles
+ * @async
+ * @returns {Promise<string[]>} Array de nombres de categorías en inglés
+ * @throws {Error} Si la petición HTTP falla
+ * @example
+ * ```tsx
+ * const categories = await getCategories();
+ * console.log(categories); // ["electronics", "jewelery", "men's clothing", "women's clothing"]
+ * ```
+ */
 export const getCategories = async (): Promise<string[]> => {
   const response = await api.get<string[]>('/products/categories');
   return response.data;

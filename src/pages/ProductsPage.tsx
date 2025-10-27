@@ -18,10 +18,23 @@ function ProductsPage() {
   const { products, loading, error, refetch } = useProducts();
   const { params, updateURLParams } = useURLParams();
 
+  // Calcular el precio máximo de los productos para el rango inicial
+  const maxProductPrice = useMemo(() => {
+    if (!products || products.length === 0) return 1000000; // 1M CLP por defecto
+    return Math.ceil(Math.max(...products.map(p => convertToCLP(p.price))) / 100000) * 100000;
+  }, [products]);
+
   // Estados locales para filtros avanzados
   const [sortBy, setSortBy] = useState<SortOption>('default');
-  const [priceRange, setPriceRange] = useState<PriceRange>({ min: 0, max: 1000 });
+  const [priceRange, setPriceRange] = useState<PriceRange>({ min: 0, max: 0 }); // Se inicializará con maxProductPrice
   const [minRating, setMinRating] = useState<number>(0);
+
+  // Actualizar el rango de precio cuando se carguen los productos
+  useMemo(() => {
+    if (priceRange.max === 0 && maxProductPrice > 0) {
+      setPriceRange({ min: 0, max: maxProductPrice });
+    }
+  }, [maxProductPrice, priceRange.max]);
 
   const handleCategoryChange = (category: string) => {
     updateURLParams({ category });
@@ -62,11 +75,13 @@ function ProductsPage() {
       );
     }
 
-    // Filtrar por precio
-    filtered = filtered.filter(product => {
-      const priceCLP = convertToCLP(product.price);
-      return priceCLP >= priceRange.min && priceCLP <= priceRange.max;
-    });
+    // Filtrar por precio (solo si el rango no es el máximo por defecto)
+    if (priceRange.max > 0 && (priceRange.min > 0 || priceRange.max < maxProductPrice)) {
+      filtered = filtered.filter(product => {
+        const priceCLP = convertToCLP(product.price);
+        return priceCLP >= priceRange.min && priceCLP <= priceRange.max;
+      });
+    }
 
     // Filtrar por rating
     if (minRating > 0) {
@@ -93,7 +108,7 @@ function ProductsPage() {
     }
 
     return filtered;
-  }, [products, params.search, params.category, priceRange, minRating, sortBy]);
+  }, [products, params.search, params.category, priceRange, minRating, sortBy, maxProductPrice]);
 
   // Obtener categorías únicas
   const categories = useMemo(() => {
@@ -163,7 +178,7 @@ function ProductsPage() {
             value={priceRange}
             onChange={setPriceRange}
             minPrice={0}
-            maxPrice={1000}
+            maxPrice={maxProductPrice}
           />
 
           <RatingFilter

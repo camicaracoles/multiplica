@@ -114,15 +114,18 @@ function CategoriesPage() {
 
         .category-card__image-wrapper {
           width: 100%;
-          height: 200px;
+          height: 300px;
           overflow: hidden;
           background: var(--bg-secondary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .category-card__image {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
           transition: transform var(--transition-normal);
         }
 
@@ -154,7 +157,7 @@ function CategoriesPage() {
           }
 
           .category-card__image-wrapper {
-            height: 150px;
+            height: 200px;
           }
 
           .category-card__content {
