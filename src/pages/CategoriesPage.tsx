@@ -2,6 +2,8 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useProducts } from '../hooks/useProducts'
 import { translateCategory } from '../utils/formatters'
+import { ProductGridSkeleton } from '../components/Skeleton'
+import ErrorMessage from '../components/ErrorMessage'
 import '../App.css'
 
 function CategoriesPage() {
@@ -31,11 +33,9 @@ function CategoriesPage() {
       <div className="app__content">
         <div className="app__header">
           <h1 className="app__title">Categorías</h1>
+          <p className="app__subtitle">Explora nuestros productos por categoría</p>
         </div>
-        <div className="app__loading">
-          <div className="spinner"></div>
-          <p>Cargando categorías...</p>
-        </div>
+        <ProductGridSkeleton count={4} />
       </div>
     );
   }
@@ -45,10 +45,13 @@ function CategoriesPage() {
       <div className="app__content">
         <div className="app__header">
           <h1 className="app__title">Categorías</h1>
+          <p className="app__subtitle">Explora nuestros productos por categoría</p>
         </div>
-        <div className="app__error">
-          <p>Error al cargar las categorías</p>
-        </div>
+        <ErrorMessage
+          title="Error al cargar categorías"
+          message="No pudimos cargar las categorías. Por favor, intenta nuevamente."
+          variant="error"
+        />
       </div>
     );
   }

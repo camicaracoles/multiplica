@@ -59,3 +59,53 @@ export function getTranslatedCategories(categories: string[]): Array<{ key: stri
   }));
 }
 
+/**
+ * Calcula el precio con descuento
+ */
+export function calculateDiscountPrice(priceUSD: number, discountPercent: number): number {
+  const priceCLP = convertToCLP(priceUSD);
+  return Math.round(priceCLP * (1 - discountPercent / 100));
+}
+
+/**
+ * Formatea precio con descuento
+ */
+export function formatDiscountPrice(priceUSD: number, discountPercent: number): string {
+  const discountedPrice = calculateDiscountPrice(priceUSD, discountPercent);
+
+  return new Intl.NumberFormat('es-CL', {
+    style: 'currency',
+    currency: 'CLP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(discountedPrice);
+}
+
+/**
+ * Formatea número grande (ej: 1000 -> 1K, 1000000 -> 1M)
+ */
+export function formatCompactNumber(num: number): string {
+  return new Intl.NumberFormat('es-CL', {
+    notation: 'compact',
+    compactDisplay: 'short'
+  }).format(num);
+}
+
+/**
+ * Formatea porcentaje
+ */
+export function formatPercent(value: number): string {
+  return new Intl.NumberFormat('es-CL', {
+    style: 'percent',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value / 100);
+}
+
+/**
+ * Formatea rating (ej: 4.5 -> "4.5 ★")
+ */
+export function formatRating(rating: number): string {
+  return `${rating.toFixed(1)} ★`;
+}
+

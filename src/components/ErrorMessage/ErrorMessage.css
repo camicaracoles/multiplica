@@ -3,12 +3,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-xl);
+  padding: var(--spacing-2xl) var(--spacing-xl);
   text-align: center;
   min-height: 400px;
   background-color: var(--bg-primary);
   border-radius: var(--border-radius-lg);
   border: 2px dashed var(--border-color);
+  gap: var(--spacing-sm);
+}
+
+.error-message--error {
+  border-color: var(--color-error-light);
+  background-color: var(--color-error-light);
+}
+
+.error-message--warning {
+  border-color: var(--color-warning-light);
+  background-color: var(--color-warning-light);
+}
+
+.error-message--info {
+  border-color: var(--color-info-light);
+  background-color: var(--color-info-light);
 }
 
 .error-message__icon {
@@ -39,23 +55,44 @@
 }
 
 .error-message__button {
-  padding: var(--spacing-sm) var(--spacing-xl);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
   background-color: var(--color-primary);
   color: white;
   border: none;
   border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-fast);
   min-height: 44px;
-  min-width: 120px;
+  min-width: 140px;
+}
+
+.error-message__button-icon {
+  font-size: var(--font-size-lg);
+  animation: rotate 1s linear infinite paused;
+}
+
+.error-message__button:hover .error-message__button-icon {
+  animation-play-state: running;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-message__button:hover {
   background-color: var(--color-primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 .error-message__button:active {

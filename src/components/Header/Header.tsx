@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 
 interface HeaderProps {
@@ -10,6 +10,7 @@ interface HeaderProps {
 function Header({ onSearch, searchValue = '' }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(searchValue);
+  const location = useLocation();
 
   // Sincronizar con el valor externo (URL)
   useEffect(() => {
@@ -44,6 +45,14 @@ function Header({ onSearch, searchValue = '' }: HeaderProps) {
     setIsMenuOpen(false);
   };
 
+  // Función para verificar si una ruta está activa
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <header className="header">
       <div className="header__container">
@@ -59,16 +68,40 @@ function Header({ onSearch, searchValue = '' }: HeaderProps) {
         <nav className="header__nav">
           <ul className="header__nav-list">
             <li className="header__nav-item">
-              <Link to="/" className="header__nav-link" onClick={handleHomeClick}>Inicio</Link>
+              <Link
+                to="/"
+                className={`header__nav-link ${isActive('/') ? 'header__nav-link--active' : ''}`}
+                onClick={handleHomeClick}
+              >
+                Inicio
+              </Link>
             </li>
             <li className="header__nav-item">
-              <Link to="/productos" className="header__nav-link" onClick={() => setIsMenuOpen(false)}>Productos</Link>
+              <Link
+                to="/productos"
+                className={`header__nav-link ${isActive('/productos') ? 'header__nav-link--active' : ''}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Productos
+              </Link>
             </li>
             <li className="header__nav-item">
-              <Link to="/categorias" className="header__nav-link" onClick={() => setIsMenuOpen(false)}>Categorías</Link>
+              <Link
+                to="/categorias"
+                className={`header__nav-link ${isActive('/categorias') ? 'header__nav-link--active' : ''}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Categorías
+              </Link>
             </li>
             <li className="header__nav-item">
-              <Link to="/ofertas" className="header__nav-link" onClick={() => setIsMenuOpen(false)}>Ofertas</Link>
+              <Link
+                to="/ofertas"
+                className={`header__nav-link ${isActive('/ofertas') ? 'header__nav-link--active' : ''}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Ofertas
+              </Link>
             </li>
           </ul>
         </nav>
@@ -112,22 +145,38 @@ function Header({ onSearch, searchValue = '' }: HeaderProps) {
         <nav className="header__mobile-nav">
           <ul className="header__mobile-nav-list">
             <li className="header__mobile-nav-item">
-              <Link to="/" className="header__mobile-nav-link" onClick={handleHomeClick}>
+              <Link
+                to="/"
+                className={`header__mobile-nav-link ${isActive('/') ? 'header__mobile-nav-link--active' : ''}`}
+                onClick={handleHomeClick}
+              >
                 Inicio
               </Link>
             </li>
             <li className="header__mobile-nav-item">
-              <Link to="/productos" className="header__mobile-nav-link" onClick={toggleMenu}>
+              <Link
+                to="/productos"
+                className={`header__mobile-nav-link ${isActive('/productos') ? 'header__mobile-nav-link--active' : ''}`}
+                onClick={toggleMenu}
+              >
                 Productos
               </Link>
             </li>
             <li className="header__mobile-nav-item">
-              <Link to="/categorias" className="header__mobile-nav-link" onClick={toggleMenu}>
+              <Link
+                to="/categorias"
+                className={`header__mobile-nav-link ${isActive('/categorias') ? 'header__mobile-nav-link--active' : ''}`}
+                onClick={toggleMenu}
+              >
                 Categorías
               </Link>
             </li>
             <li className="header__mobile-nav-item">
-              <Link to="/ofertas" className="header__mobile-nav-link" onClick={toggleMenu}>
+              <Link
+                to="/ofertas"
+                className={`header__mobile-nav-link ${isActive('/ofertas') ? 'header__mobile-nav-link--active' : ''}`}
+                onClick={toggleMenu}
+              >
                 Ofertas
               </Link>
             </li>

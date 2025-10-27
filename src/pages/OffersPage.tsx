@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 import ProductGrid from '../components/ProductGrid'
+import { ProductGridSkeleton } from '../components/Skeleton'
+import ErrorMessage from '../components/ErrorMessage'
 import { useProducts } from '../hooks/useProducts'
+import { formatPrice, formatCompactNumber } from '../utils/formatters'
 import type { Product } from '../types/product'
 import '../App.css'
 
@@ -27,6 +30,37 @@ function OffersPage() {
     return offersProducts.reduce((acc, product) => acc + (product.price * 0.2), 0);
   }, [offersProducts]);
 
+  // Manejar estado de carga
+  if (loading) {
+    return (
+      <div className="app__content">
+        <div className="app__header">
+          <h1 className="app__title">🔥 Ofertas Especiales</h1>
+          <p className="app__subtitle">Los mejores precios y productos destacados</p>
+        </div>
+        <ProductGridSkeleton count={12} />
+      </div>
+    );
+  }
+
+  // Manejar error
+  if (error) {
+    return (
+      <div className="app__content">
+        <div className="app__header">
+          <h1 className="app__title">🔥 Ofertas Especiales</h1>
+          <p className="app__subtitle">Los mejores precios y productos destacados</p>
+        </div>
+        <ErrorMessage
+          title="Error al cargar ofertas"
+          message={error}
+          onRetry={refetch}
+          variant="error"
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="app__content">
       <div className="app__header">
@@ -43,7 +77,7 @@ function OffersPage() {
           </div>
           <div className="offers-banner__stat">
             <span className="offers-banner__stat-number">
-              ${totalSavings.toFixed(2)}
+              {formatPrice(totalSavings)}
             </span>
             <span className="offers-banner__stat-label">Ahorro total disponible</span>
           </div>
@@ -55,20 +89,16 @@ function OffersPage() {
       </div>
 
       {/* Resultados */}
-      {!loading && !error && (
-        <div className="app__results">
-          <p className="app__results-count">
-            <strong>{offersProducts.length}</strong> productos en oferta
-          </p>
-        </div>
-      )}
+      <div className="app__results">
+        <p className="app__results-count">
+          <strong>{offersProducts.length}</strong> productos en oferta
+        </p>
+      </div>
 
       {/* Grid de Productos */}
       <ProductGrid
         products={offersProducts}
-        loading={loading}
-        error={error}
-        onRetry={refetch}
+        loading={false}
       />
 
       <style>{`
