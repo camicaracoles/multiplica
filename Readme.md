@@ -1,5 +1,11 @@
 # 📚 Documentación del Proyecto - Multiplica E-commerce
 
+## 🌐 Demo en Vivo
+
+**🚀 Ver aplicación desplegada**: [https://multiplica-hipl.vercel.app/](https://multiplica-hipl.vercel.app/)
+
+---
+
 ## 📋 Tabla de Contenidos
 
 1. [Descripción General](#descripción-general)
