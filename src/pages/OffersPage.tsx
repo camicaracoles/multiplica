@@ -3,8 +3,7 @@ import ProductGrid from '../components/ProductGrid'
 import { ProductGridSkeleton } from '../components/Skeleton'
 import ErrorMessage from '../components/ErrorMessage'
 import { useProducts } from '../hooks/useProducts'
-import { formatPrice, formatCompactNumber } from '../utils/formatters'
-import type { Product } from '../types/product'
+import { formatPrice } from '../utils/formatters'
 import '../App.css'
 
 function OffersPage() {

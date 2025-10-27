@@ -11,10 +11,6 @@ function CatalogPage() {
   const { products, loading, error, refetch } = useProducts();
   const { params, updateURLParams } = useURLParams();
 
-  const handleSearch = (searchTerm: string) => {
-    updateURLParams({ search: searchTerm });
-  }
-
   const handleCategoryChange = (category: string) => {
     updateURLParams({ category });
   }

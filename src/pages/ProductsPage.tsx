@@ -11,7 +11,6 @@ import ErrorMessage from '../components/ErrorMessage'
 import { useProducts } from '../hooks/useProducts'
 import { useURLParams } from '../hooks/useURLParams'
 import { translateCategory, convertToCLP } from '../utils/formatters'
-import type { Product } from '../types/product'
 import '../App.css'
 
 function ProductsPage() {
