@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Product } from '../../types/product';
 import { formatPrice } from '../../utils/formatters';
 import './ProductCard.css';
@@ -10,7 +11,7 @@ interface ProductCardProps {
   isOnSale?: boolean;
 }
 
-function ProductCard({ product, onViewDetail, isNew = false, isOnSale = false }: ProductCardProps) {
+function ProductCard({ product, isNew = false, isOnSale = false }: ProductCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -21,12 +22,6 @@ function ProductCard({ product, onViewDetail, isNew = false, isOnSale = false }:
   const handleImageError = () => {
     setImageError(true);
     setImageLoaded(true);
-  };
-
-  const handleViewDetail = () => {
-    if (onViewDetail) {
-      onViewDetail(product.id);
-    }
   };
 
   // Truncar descripción a 100 caracteres
@@ -131,13 +126,13 @@ function ProductCard({ product, onViewDetail, isNew = false, isOnSale = false }:
           </div>
 
           {/* Botón Ver Detalle */}
-          <button
+          <Link
+            to={`/producto/${product.id}`}
             className="product-card__button"
-            onClick={handleViewDetail}
             aria-label={`Ver detalles de ${product.title}`}
           >
             Ver detalle
-          </button>
+          </Link>
         </div>
       </div>
     </article>

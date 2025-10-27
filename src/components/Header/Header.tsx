@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Header.css';
 
 interface HeaderProps {
@@ -34,31 +35,40 @@ function Header({ onSearch, searchValue = '' }: HeaderProps) {
     }
   };
 
+  const handleHomeClick = () => {
+    // Limpiar búsqueda y cerrar menú
+    setSearchQuery('');
+    if (onSearch) {
+      onSearch('');
+    }
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="header">
       <div className="header__container">
         {/* Logo */}
         <div className="header__logo">
-          <a href="/" className="header__logo-link">
+          <Link to="/" className="header__logo-link" onClick={handleHomeClick}>
             <span className="header__logo-icon">🛍️</span>
             <span className="header__logo-text">Multiplica</span>
-          </a>
+          </Link>
         </div>
 
         {/* Navegación Desktop */}
         <nav className="header__nav">
           <ul className="header__nav-list">
             <li className="header__nav-item">
-              <a href="/" className="header__nav-link">Inicio</a>
+              <Link to="/" className="header__nav-link" onClick={handleHomeClick}>Inicio</Link>
             </li>
             <li className="header__nav-item">
-              <a href="#productos" className="header__nav-link">Productos</a>
+              <Link to="/productos" className="header__nav-link" onClick={() => setIsMenuOpen(false)}>Productos</Link>
             </li>
             <li className="header__nav-item">
-              <a href="#categorias" className="header__nav-link">Categorías</a>
+              <Link to="/categorias" className="header__nav-link" onClick={() => setIsMenuOpen(false)}>Categorías</Link>
             </li>
             <li className="header__nav-item">
-              <a href="#ofertas" className="header__nav-link">Ofertas</a>
+              <Link to="/ofertas" className="header__nav-link" onClick={() => setIsMenuOpen(false)}>Ofertas</Link>
             </li>
           </ul>
         </nav>
@@ -102,24 +112,24 @@ function Header({ onSearch, searchValue = '' }: HeaderProps) {
         <nav className="header__mobile-nav">
           <ul className="header__mobile-nav-list">
             <li className="header__mobile-nav-item">
-              <a href="/" className="header__mobile-nav-link" onClick={toggleMenu}>
+              <Link to="/" className="header__mobile-nav-link" onClick={handleHomeClick}>
                 Inicio
-              </a>
+              </Link>
             </li>
             <li className="header__mobile-nav-item">
-              <a href="#productos" className="header__mobile-nav-link" onClick={toggleMenu}>
+              <Link to="/productos" className="header__mobile-nav-link" onClick={toggleMenu}>
                 Productos
-              </a>
+              </Link>
             </li>
             <li className="header__mobile-nav-item">
-              <a href="#categorias" className="header__mobile-nav-link" onClick={toggleMenu}>
+              <Link to="/categorias" className="header__mobile-nav-link" onClick={toggleMenu}>
                 Categorías
-              </a>
+              </Link>
             </li>
             <li className="header__mobile-nav-item">
-              <a href="#ofertas" className="header__mobile-nav-link" onClick={toggleMenu}>
+              <Link to="/ofertas" className="header__mobile-nav-link" onClick={toggleMenu}>
                 Ofertas
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>

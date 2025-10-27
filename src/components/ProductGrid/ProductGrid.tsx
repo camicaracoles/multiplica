@@ -9,10 +9,9 @@ interface ProductGridProps {
   products: Product[];
   loading?: boolean;
   itemsPerPage?: number;
-  onProductClick?: (productId: number) => void;
 }
 
-function ProductGrid({ products, loading = false, itemsPerPage = 12, onProductClick }: ProductGridProps) {
+function ProductGrid({ products, loading = false, itemsPerPage = 12 }: ProductGridProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -49,11 +48,7 @@ function ProductGrid({ products, loading = false, itemsPerPage = 12, onProductCl
     }
   };
 
-  const handleViewDetail = (productId: number) => {
-    if (onProductClick) {
-      onProductClick(productId);
-    }
-  };
+
 
   // Generar números de página para mostrar
   const getPageNumbers = () => {
@@ -151,7 +146,6 @@ function ProductGrid({ products, loading = false, itemsPerPage = 12, onProductCl
           <ProductCard
             key={product.id}
             product={product}
-            onViewDetail={handleViewDetail}
           />
         ))}
       </div>
